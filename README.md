@@ -1,2 +1,0 @@
-# AmberBim
-First Revit addin
