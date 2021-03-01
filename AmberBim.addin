@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<RevitAddIns>
+        <AddIn Type="Application">
+        <Name>AmberBIM Tools</Name>
+        <Assembly>AmberBim.dll</Assembly>
+        <AddInId>82861D45-2DA9-4D5D-89B0-DA33200D6E5C</AddInId>
+        <FullClassName>AmberBim.AmberBimRibbon</FullClassName>
+        <Text>AmberBIM Tools</Text>  
+        <VendorId>Mateusz Amber Ambrożewicz</VendorId>
+        <VendorDescription>AmberBIM Tools v.0.2</VendorDescription>
+        </AddIn>
+</RevitAddIns>
