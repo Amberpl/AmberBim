@@ -1,86 +1,66 @@
-﻿#region Copyright
-//
-//  Copyright (C) 2020 by Mateusz Amber Ambrożewicz
-//
-#endregion
-
-#region Namespace
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 using System.IO;
-using System.Windows.Media.Imaging;
-using Autodesk.Revit.ApplicationServices;
-using Autodesk.Revit.Attributes;
-using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-#endregion
+#if REVIT_THEME_SUPPORT
+using Autodesk.Revit.UI.Events;
+#endif
 
 namespace AmberBim
 {
     public class AmberBimRibbon : IExternalApplication
     {
-        const string _dllExtension = ".dll";
-        const string _addinName = "AmberBim";
+        internal static AmberBimRibbon thisApp;
+        private readonly Dictionary<PushButton, string> ribbonIcons = new Dictionary<PushButton, string>();
+        private string assemblyPath;
+        private bool? darkIcons;
+#if REVIT_THEME_SUPPORT
+        private UIControlledApplication themeApplication;
+#endif
 
-        // class instance
-        internal static AmberBimRibbon thisApp = null;
-
-        /// <summary>
-        /// Location of managed dll
-        /// </summary>
-        string _manDllPath;
-
-        /// <summary>
-        /// OnShoutdown() - Called when Revit ends.
-        /// </summary>
-        public Result OnShutdown(UIControlledApplication app)
-        {
-            DependencyLoader.Shutdown();
-            return Result.Succeeded;
-        }
-
-        /// <summary>
-        /// OnStartup() - called when Revit starts.
-        /// </summary>
         public Result OnStartup(UIControlledApplication app)
         {
             DependencyLoader.Initialize();
-            // Externail application directory
-            string dir = Path.GetDirectoryName(
-                System.Reflection.Assembly
-                .GetExecutingAssembly().Location);
-
-            // External command path:
-            _manDllPath = Path.Combine(dir, _addinName + _dllExtension);
-            if (!File.Exists(_manDllPath))
+            assemblyPath = typeof(AmberBimRibbon).Assembly.Location;
+            if (!File.Exists(assemblyPath))
             {
-                TaskDialog.Show("AmberBIM", "External command assembly not found at directory: " + _manDllPath);
+                TaskDialog.Show("AmberBIM", "External command assembly not found at directory: " + assemblyPath);
                 return Result.Failed;
             }
 
             thisApp = this;
-
             AddRibbon(app);
-
+#if REVIT_THEME_SUPPORT
+            ApplyIcons(UIThemeManager.CurrentTheme == UITheme.Dark);
+            themeApplication = app;
+            themeApplication.ThemeChanged += OnThemeChanged;
+#else
+            ApplyIcons(false);
+#endif
             return Result.Succeeded;
         }
 
-        /// <summary>
-        /// Criate ribbon panel
-        /// </summary>
-        /// 
-        public void AddRibbon( UIControlledApplication app)
+        public Result OnShutdown(UIControlledApplication app)
+        {
+#if REVIT_THEME_SUPPORT
+            if (themeApplication != null)
+            {
+                themeApplication.ThemeChanged -= OnThemeChanged;
+                themeApplication = null;
+            }
+#endif
+            ribbonIcons.Clear();
+            darkIcons = null;
+            thisApp = null;
+            DependencyLoader.Shutdown();
+            return Result.Succeeded;
+        }
+
+        public void AddRibbon(UIControlledApplication app)
         {
             app.CreateRibbonTab("AmberBIM");
-
-            RibbonPanel rebarPanel = app.CreateRibbonPanel("AmberBIM","Rebar");
-            RibbonPanel cadPanel = app.CreateRibbonPanel("AmberBIM", "CAD");
-            RibbonPanel infoPanel = app.CreateRibbonPanel("AmberBIM","Info");
-
+            var rebarPanel = app.CreateRibbonPanel("AmberBIM", "Rebar");
+            var cadPanel = app.CreateRibbonPanel("AmberBIM", "CAD");
+            var infoPanel = app.CreateRibbonPanel("AmberBIM", "Info");
             AddPushButton(rebarPanel);
             AddCadButton(cadPanel);
             AddInfoButton(infoPanel);
@@ -89,58 +69,74 @@ namespace AmberBim
         public void AddPushButton(RibbonPanel panel)
         {
 #if REVIT_LEGACY_REBAR_SOLID
-            PushButtonData pushButtonSolid = new PushButtonData("SetSolidInView", "Solid", _manDllPath, _addinName + ".RebarSolidInView");
-            //PushButton pushButton1 = panel.AddItem(pushButtonSolid) as PushButton;
-
-            pushButtonSolid.Image = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/Solid16.png"));
-            pushButtonSolid.ToolTip = "Set all rebar visible in view as a solid.\n" +
-                "Works only in 3D view.";
-
-
-            PushButtonData pushButtonNotSolid = new PushButtonData("SetNotSolid", "Not Solid", _manDllPath, _addinName + ".RebarNotSolidInView");
-            //PushButton pushButton2 = panel.AddItem(pushButtonNotSolid) as PushButton;
-
-            pushButtonNotSolid.Image = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/NotSolid16.png"));
-            pushButtonNotSolid.ToolTip = "Set all rebar visible in view as a not solid";
-
-            IList<RibbonItem> stackedButtons1 = panel.AddStackedItems(pushButtonSolid, pushButtonNotSolid);
+            var solid = new PushButtonData("SetSolidInView", "Solid", assemblyPath, "AmberBim.RebarSolidInView")
+            {
+                ToolTip = "Set all rebar visible in view as a solid.\nWorks only in 3D view."
+            };
+            var notSolid = new PushButtonData("SetNotSolid", "Not Solid", assemblyPath, "AmberBim.RebarNotSolidInView")
+            {
+                ToolTip = "Set all rebar visible in view as a not solid"
+            };
+            var solidButtons = panel.AddStackedItems(solid, notSolid);
+            Track((PushButton)solidButtons[0], "Solid");
+            Track((PushButton)solidButtons[1], "NotSolid");
 #endif
-
-            PushButtonData pushButtonUnobscured = new PushButtonData("SetUnobscured", "Unobscured", _manDllPath, _addinName + ".RebarUnobscuredInView");
-            //PushButton pushButton3 = panel.AddItem(pushButtonUnobscured) as PushButton;
-
-            pushButtonUnobscured.Image = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/Unobscured16.png"));
-            pushButtonUnobscured.ToolTip = "Set all rebar visible in view as a unobscured";
-
-            PushButtonData pushButtonObscured = new PushButtonData("SetObscured", "Obscured", _manDllPath, _addinName + ".RebarObscuredInView");
-            //PushButton pushButton4 = panel.AddItem(pushButtonObscured) as PushButton;
-
-            pushButtonObscured.Image = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/Obscured16.png"));
-            pushButtonObscured.ToolTip = "Set all rebar visible in view as a obscured";
-
-            IList<RibbonItem> stackedButtons2 = panel.AddStackedItems(pushButtonUnobscured, pushButtonObscured);
+            var unobscured = new PushButtonData("SetUnobscured", "Unobscured", assemblyPath, "AmberBim.RebarUnobscuredInView")
+            {
+                ToolTip = "Set all rebar visible in view as a unobscured"
+            };
+            var obscured = new PushButtonData("SetObscured", "Obscured", assemblyPath, "AmberBim.RebarObscuredInView")
+            {
+                ToolTip = "Set all rebar visible in view as a obscured"
+            };
+            var visibilityButtons = panel.AddStackedItems(unobscured, obscured);
+            Track((PushButton)visibilityButtons[0], "Unobscured");
+            Track((PushButton)visibilityButtons[1], "Obscured");
         }
+
         public void AddCadButton(RibbonPanel panel)
         {
-            PushButtonData pushButtonCadOpen = new PushButtonData("OpenCadFile", "Open DWG file", _manDllPath, _addinName + ".OpenCadFile");
-            PushButton pushButton1 = panel.AddItem(pushButtonCadOpen) as PushButton;
-
-            pushButton1.LargeImage = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/DwgOpen32.png"));
-            pushButton1.ToolTip = "Open selected DWG file in external program";
-
-            PushButtonData pushButtonCadReload = new PushButtonData("ReloadCadFile", "Reload DWG file", _manDllPath, _addinName + ".ReloadCadFile");
-            PushButton pushButton2 = panel.AddItem(pushButtonCadReload) as PushButton;
-
-            pushButton2.LargeImage = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/DwgReload32.png"));
-            pushButton2.ToolTip = "Reload selected DWG file";
+            var open = new PushButtonData("OpenCadFile", "Open DWG file", assemblyPath, "AmberBim.OpenCadFile")
+            {
+                ToolTip = "Open selected DWG file in external program"
+            };
+            Track((PushButton)panel.AddItem(open), "DwgOpen");
+            var reload = new PushButtonData("ReloadCadFile", "Reload DWG file", assemblyPath, "AmberBim.ReloadCadFile")
+            {
+                ToolTip = "Reload selected DWG file"
+            };
+            Track((PushButton)panel.AddItem(reload), "DwgReload");
         }
+
         public void AddInfoButton(RibbonPanel panel)
         {
-            PushButtonData pushButtonInfo = new PushButtonData("Info", "About", _manDllPath, _addinName + ".Info");
-            PushButton pushButton1 = panel.AddItem(pushButtonInfo) as PushButton;
-
-            pushButton1.LargeImage = new BitmapImage(new Uri("pack://application:,,,/AmberBim;component/Ico/info.png"));
-            pushButton1.ToolTip = "About AmberBIM";
+            var info = new PushButtonData("Info", "About", assemblyPath, "AmberBim.Info")
+            {
+                ToolTip = "About AmberBIM"
+            };
+            Track((PushButton)panel.AddItem(info), "About");
         }
+
+        private void Track(PushButton button, string icon)
+        {
+            ribbonIcons.Add(button, icon);
+            RibbonIcons.Apply(button, icon, darkIcons ?? false);
+        }
+
+        private void ApplyIcons(bool dark)
+        {
+            if (darkIcons == dark)
+                return;
+            foreach (var item in ribbonIcons)
+                RibbonIcons.Apply(item.Key, item.Value, dark);
+            darkIcons = dark;
+        }
+
+#if REVIT_THEME_SUPPORT
+        private void OnThemeChanged(object sender, ThemeChangedEventArgs args)
+        {
+            ApplyIcons(UIThemeManager.CurrentTheme == UITheme.Dark);
+        }
+#endif
     }
 }

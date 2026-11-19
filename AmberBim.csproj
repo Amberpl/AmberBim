@@ -13,7 +13,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <Deterministic>true</Deterministic>
-    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**;tools\**</DefaultItemExcludes>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin\Revit$(RevitVersion)\$(Configuration)\</OutputPath>
     <RevitApiPath Condition="'$(RevitApiPath)' == ''">$(ProgramW6432)\Autodesk\Revit $(RevitVersion)</RevitApiPath>
@@ -24,6 +24,7 @@
     <DefineConstants Condition="$(Configuration.StartsWith('Debug'))">$(DefineConstants);DEBUG;TRACE</DefineConstants>
     <DefineConstants>$(DefineConstants);TRACE;REVIT_$(RevitVersion)</DefineConstants>
     <DefineConstants Condition="'$(RevitVersion)' &lt;= '2023'">$(DefineConstants);REVIT_LEGACY_REBAR_SOLID</DefineConstants>
+    <DefineConstants Condition="'$(RevitVersion)' &gt;= '2024'">$(DefineConstants);REVIT_THEME_SUPPORT</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,7 +37,7 @@
       <HintPath>$(RevitApiPath)\RevitAPIUI.dll</HintPath>
       <Private>false</Private>
     </Reference>
-    <Resource Include="Ico\*.png" />
+    <Resource Include="Ico\Light\*.png;Ico\Dark\*.png" />
     <None Update="AmberBim.addin" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 

@@ -1,34 +1,35 @@
 # Docs changes since last sync
-- Added: none
+- Added: docs/ribbon-icons.md, docs/mockup/DESIGN.md, docs/mockup/ribbon-icons.png (binary reference, recorded by hash).
 - Deleted: none
-- Modified: docs/revit-compatibility.md, Release file layout section.
+- Modified: none
 
 # Consistency
-- about-window.md is unchanged.
-- The approved Release layout retains the manifest's root assembly path and requires dependency probing from AmberBIM for all supported frameworks.
-- Debug keeps its existing flat output.
-- There is no new STP, mockup, RPC contract or label in the delta. No test suite or visual contract is inferred.
+- The design link resolves to the accepted seven-icon light/dark board.
+- Legacy commands remain limited to 2021–2023; icon changes do not add or remove commands.
+- 2021–2023 always use light assets with no theme access or subscription. 2024–2027 select at startup and update on ThemeChanged.
+- Existing about-window and Revit compatibility specifications are unchanged.
+- docs/main.md, docs/arch.md and an STP do not exist. The approved behavior/design files are the bounded delta. No new labels or test suite are inferred.
 
 # Change list (implementation)
-- [x] Move all Release output support files into AmberBIM, keeping only AmberBim.dll and AmberBim.addin at the root.
-- [x] Preserve nested dependency paths and include relocated files in MSBuild clean tracking.
-- [x] Resolve private dependencies from AmberBIM before creating the WPF window, without redirecting unrelated requesting assemblies.
-- [x] Preserve flat Debug layout and document Release deployment.
+- [x] Produce 28 transparent PNG resources: seven icons, two themes, 16/32 px, following the accepted board.
+- [x] Keep reproducible vector sources and generation tooling for precise small-size rendering.
+- [x] Assign Image and LargeImage on all actual ribbon buttons, including stacked items.
+- [x] Compile theme detection/events only for Revit 2024–2027, with startup selection and shutdown unsubscription.
+- [x] Keep Revit 2021–2023 light-only without theme calls.
 
 # Verification
-- [x] Compile all 18 Debug/Release variants and inspect each layout.
-- [x] Exercise dependency loading and the WPF window from an isolated Release deployment on net48, net8 and net10.
-- [x] Verify incremental build and Clean/Rebuild behavior.
-- [x] Verify Debug runtime and unrelated assembly requests remain unaffected.
+- [x] Inspect both themes at native sizes and compare the family to the accepted design board.
+- [x] Validate PNG dimensions, transparency, resource loading and light/dark differences.
+- [x] Compile all 18 configurations and inspect legacy/modern API references.
+- [x] Verify theme resource changes with standalone previews; actual Revit theme event integration remains unexercised.
 
 # Results
-- All 18 Debug/Release builds succeeded, including both net8 and net10 variants for Revit 2025/2026.
-- Every Release output root contains only AmberBim.dll and AmberBim.addin. Dependencies, symbols, config and deps files are under AmberBIM. Debug retains the flat layout.
-- Relocated files participate in FileWrites tracking. Incremental builds, Clean and rebuilding were verified for Revit 2024/net48, 2025/net8 and 2027/net10. Clean removed all generated output files.
-- A separate layout fixture confirmed nested support-file paths are preserved.
-- Isolated preview hosts have no WPF UI package or add-in compile reference. Release previews on net48/net8/net10 instantiated the WPF window and confirmed WPF UI libraries load from AmberBIM. Modal ownership and button/Escape/system-close behavior passed.
-- Debug previews passed on all three frameworks with WPF UI loaded from the original flat directory.
-- Resolver checks reject unrelated requesting assemblies, unknown dependencies and mismatched dependency versions. Initialization is idempotent and shutdown unregisters the handler.
-- All 18 output inspections passed: x64/framework/API/version metadata, WPF UI dependencies, compiled XAML, existing ribbon images and manifest, and no copied Autodesk DLLs.
-- Integration inside Revit has not been exercised. Existing compilation warnings remain.
-- Verification scripts and fixture files stay in ignored .tools/; no repository test suite or docs changes were added.
+- Added 28 transparent PNG resources (7 symbols × 2 themes × 2 sizes), 14 corresponding SVGs and deterministic WPF geometry-based generation tooling. The native-size light/dark preview was visually compared with the approved board; obscured bars retain visible gaps.
+- Image and LargeImage are assigned to actual PushButton objects, including both stacked rebar pairs. Frozen bitmaps are cached and reused when a theme returns.
+- Revit 2021–2023 binaries contain no UIThemeManager.CurrentTheme calls, ThemeChanged subscriptions/unsubscriptions or theme handler. They always initialize light icons.
+- Revit 2024–2027 binaries contain startup theme selection, ThemeChanged subscription/update and shutdown unsubscription. Repeated notifications for the same theme reuse existing images.
+- All 18 Debug/Release configurations compiled and passed metadata/resource inspections. All 28 new PNGs and compiled AboutWindow are embedded; Release folder layout and dependencies remain intact.
+- Standalone resource loading passed for Revit 2021/net48, 2024/net48, 2025/net8 and 2027/net10. Verified image dimensions, alpha transparency, byte-for-byte embedded PNG equality, different light/dark colors, identical theme silhouettes, frozen images and cache reuse.
+- Actual theme switching inside Revit has not been exercised. Existing compilation warnings remain.
+- The accepted docs and reference PNG are unchanged. Freeze stores the reference image hash, not a binary copy.
+- Verification utilities stay in ignored .tools/; no repository test suite was added.
