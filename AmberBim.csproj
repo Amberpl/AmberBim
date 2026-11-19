@@ -1,143 +1,71 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A4CBCBE1-7E0D-461C-8E32-8C728654002D}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AmberBim</RootNamespace>
     <AssemblyName>AmberBim</AssemblyName>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <UseWPF>true</UseWPF>
+    <PlatformTarget>x64</PlatformTarget>
+    <Platforms>x64</Platforms>
+    <Configurations>Debug;Release;Debug2021;Release2021;Debug2022;Release2022;Debug2023;Release2023;Debug2024;Release2024;Debug2025;Release2025;Debug2026;Release2026;Debug2027;Release2027</Configurations>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>7.3</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Deterministic>true</Deterministic>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**</DefaultItemExcludes>
+    <OutputPath>bin\Revit$(RevitVersion)\$(Configuration)\</OutputPath>
+    <RevitApiPath Condition="'$(RevitApiPath)' == ''">$(ProgramW6432)\Autodesk\Revit $(RevitVersion)</RevitApiPath>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>portable</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <Optimize Condition="$(Configuration.StartsWith('Release'))">true</Optimize>
+    <DefineConstants Condition="$(Configuration.StartsWith('Debug'))">$(DefineConstants);DEBUG;TRACE</DefineConstants>
+    <DefineConstants>$(DefineConstants);TRACE;REVIT_$(RevitVersion)</DefineConstants>
+    <DefineConstants Condition="'$(RevitVersion)' &lt;= '2023'">$(DefineConstants);REVIT_LEGACY_REBAR_SOLID</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="AdWindows">
-      <HintPath>..\..\..\..\PROGRAMY\Autodesk\Revit 2019\AdWindows.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="RevitAddInUtility">
-      <HintPath>..\..\..\..\PROGRAMY\Autodesk\Revit 2019\RevitAddInUtility.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\PROGRAMY\Autodesk\Revit 2019\RevitAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(RevitApiPath)\RevitAPI.dll</HintPath>
+      <Private>false</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\PROGRAMY\Autodesk\Revit 2019\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>$(RevitApiPath)\RevitAPIUI.dll</HintPath>
+      <Private>false</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="Xceed.Document.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\DocX.1.7.1\lib\net40\Xceed.Document.NET.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Xceed.Words.NET, Version=1.7.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
-      <HintPath>packages\DocX.1.7.1\lib\net40\Xceed.Words.NET.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock, Version=4.1.21063.2360, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
-      <HintPath>packages\Xceed.Wpf.AvalonDock.4.1.21063.2360\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit, Version=4.1.21063.2360, Culture=neutral, PublicKeyToken=ba83ff368b7563c6, processorArchitecture=MSIL">
-      <HintPath>packages\Xceed.Wpf.Toolkit.4.1.21063.2360\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
+    <Resource Include="Ico\*.png" />
+    <None Update="AmberBim.addin" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AmberBimRibbon.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
-    <Compile Include="Rebar\RebarNotSolidInView.cs" />
-    <Compile Include="Rebar\RebarObscuredInView.cs" />
-    <Compile Include="Rebar\RebarUnobscuredInView.cs" />
-    <Compile Include="Rebar\RebarSolidInView.cs" />
-    <Compile Include="Info.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReviCad\OpenCadFile.cs" />
-    <Compile Include="ReviCad\ReloadCadFile.cs" />
-    <Compile Include="Revit\ViewTabGroup.cs" />
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Configuration" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="AmberBim.addin">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Resource Include="Ico\DwgOpen32.png" />
-    <Resource Include="Ico\DwgReload32.png" />
-    <Resource Include="Ico\NotSolid16.png" />
-    <Resource Include="Ico\Obscured16.png" />
-    <Resource Include="Ico\Solid16.png" />
-    <Resource Include="Ico\Unobscured16.png" />
-    <Resource Include="Ico\dwg.png" />
+  <ItemGroup Condition="'$(RevitVersion)' &gt;= '2024'">
+    <Compile Remove="Rebar\RebarSolidInView.cs;Rebar\RebarNotSolidInView.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Ico\ImgHelloWorld.png" />
-    <Resource Include="Ico\info.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <Target Name="ValidateRevitBuild" BeforeTargets="PrepareForBuild">
+    <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(RevitVersion)', '^202[1-7]$'))"
+           Text="Unsupported RevitVersion '$(RevitVersion)'. Choose a version from 2021 to 2027." />
+    <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(Configuration)', '^(Debug|Release)(202[1-7])?$'))"
+           Text="Unsupported Configuration '$(Configuration)'. Use Debug2021 through Release2027, or Debug/Release with RevitVersion." />
+    <Error Condition="'$(ConfigurationRevitVersion)' != '' and '$(ConfigurationRevitVersion)' != '$(RevitVersion)'"
+           Text="Configuration $(Configuration) conflicts with RevitVersion $(RevitVersion)." />
+    <Error Condition="'$(RevitUseNet10)' != 'true' and '$(RevitUseNet10)' != 'false'"
+           Text="RevitUseNet10 must be true or false." />
+    <Error Condition="'$(RevitUseNet10)' == 'true' and '$(RevitVersion)' &lt;= '2024'"
+           Text="RevitUseNet10 is only supported for Revit 2025 and later." />
+    <Error Condition="'$(TargetFramework)' != '$(RevitTargetFramework)'"
+           Text="Revit $(RevitVersion) requires TargetFramework=$(RevitTargetFramework) for the selected build. Use RevitUseNet10=true for updated Revit 2025/2026 hosts." />
+    <Error Condition="'$(PlatformTarget)' != 'x64'"
+           Text="Revit builds require PlatformTarget=x64." />
+    <Error Condition="!Exists('$(RevitApiPath)\RevitAPI.dll') or !Exists('$(RevitApiPath)\RevitAPIUI.dll')"
+           Text="Revit $(RevitVersion) API assemblies not found in '$(RevitApiPath)'. Install that Revit version or set RevitApiPath to its API directory (RevitAPI.dll and RevitAPIUI.dll)." />
+    <GetAssemblyIdentity AssemblyFiles="$(RevitApiPath)\RevitAPI.dll;$(RevitApiPath)\RevitAPIUI.dll">
+      <Output TaskParameter="Assemblies" ItemName="RevitApiIdentity" />
+    </GetAssemblyIdentity>
+    <Error Condition="!$([System.String]::Copy('%(RevitApiIdentity.Version)').StartsWith('$(RevitApiMajorVersion).'))"
+           Text="%(RevitApiIdentity.Name) %(RevitApiIdentity.Version) does not match Revit $(RevitVersion). Set RevitApiPath to the matching API directory." />
+  </Target>
 </Project>

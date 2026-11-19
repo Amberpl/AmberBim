@@ -27,7 +27,7 @@ using Autodesk.Revit.UI;
 namespace AmberBim
 {
     [Transaction(TransactionMode.Manual)]
-    class RebarObscuredInView : IExternalCommand
+    public class RebarObscuredInView : IExternalCommand
     {
         Application _app;
         Document _doc;

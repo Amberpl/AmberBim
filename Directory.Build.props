@@ -1,0 +1,14 @@
+<Project>
+  <PropertyGroup>
+    <ConfigurationRevitVersion>$([System.Text.RegularExpressions.Regex]::Match('$(Configuration)', '(?&lt;=^(Debug|Release))202[1-7]$').Value)</ConfigurationRevitVersion>
+    <RevitVersion Condition="'$(RevitVersion)' == '' and '$(ConfigurationRevitVersion)' != ''">$(ConfigurationRevitVersion)</RevitVersion>
+    <RevitVersion Condition="'$(RevitVersion)' == ''">2027</RevitVersion>
+    <RevitUseNet10 Condition="'$(RevitUseNet10)' == ''">false</RevitUseNet10>
+    <RevitTargetFramework>net10.0-windows</RevitTargetFramework>
+    <RevitTargetFramework Condition="'$(RevitVersion)' &lt;= '2024'">net48</RevitTargetFramework>
+    <RevitTargetFramework Condition="('$(RevitVersion)' == '2025' or '$(RevitVersion)' == '2026') and '$(RevitUseNet10)' != 'true'">net8.0-windows</RevitTargetFramework>
+    <TargetFramework>$(RevitTargetFramework)</TargetFramework>
+    <RevitApiMajorVersion Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('$(RevitVersion)', '^202[1-7]$'))">$([MSBuild]::Subtract($(RevitVersion), 2000))</RevitApiMajorVersion>
+    <BaseIntermediateOutputPath>obj\Revit$(RevitVersion)\$(RevitTargetFramework)\</BaseIntermediateOutputPath>
+  </PropertyGroup>
+</Project>

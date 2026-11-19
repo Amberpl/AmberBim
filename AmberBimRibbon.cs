@@ -86,6 +86,7 @@ namespace AmberBim
 
         public void AddPushButton(RibbonPanel panel)
         {
+#if REVIT_LEGACY_REBAR_SOLID
             PushButtonData pushButtonSolid = new PushButtonData("SetSolidInView", "Solid", _manDllPath, _addinName + ".RebarSolidInView");
             //PushButton pushButton1 = panel.AddItem(pushButtonSolid) as PushButton;
 
@@ -101,6 +102,7 @@ namespace AmberBim
             pushButtonNotSolid.ToolTip = "Set all rebar visible in view as a not solid";
 
             IList<RibbonItem> stackedButtons1 = panel.AddStackedItems(pushButtonSolid, pushButtonNotSolid);
+#endif
 
             PushButtonData pushButtonUnobscured = new PushButtonData("SetUnobscured", "Unobscured", _manDllPath, _addinName + ".RebarUnobscuredInView");
             //PushButton pushButton3 = panel.AddItem(pushButtonUnobscured) as PushButton;

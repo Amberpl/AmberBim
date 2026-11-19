@@ -89,7 +89,7 @@ namespace AmberBim
             {
                 String filePath = ModelPathUtils.ConvertModelPathToUserVisiblePath(element.GetExternalFileReference().GetAbsolutePath()).ToString();
 
-                Process.Start(filePath);
+                Process.Start(new ProcessStartInfo(filePath) { UseShellExecute = true });
 
             }
             catch (Exception e)
