@@ -1,34 +1,34 @@
 # Docs changes since last sync
-- Added: docs/about-window.md
+- Added: none
 - Deleted: none
-- Modified: none
+- Modified: docs/revit-compatibility.md, Release file layout section.
 
 # Consistency
-- The approved about-window specification is the complete delta; revit-compatibility.md is unchanged.
-- docs/main.md, docs/arch.md, a visual mockup and STP do not exist. No pixel contract or new test suite is inferred; the approved behavior is implemented using standard WPF UI controls.
-- The website URL matches the approved external destination.
-- Version 0.3 must agree between the dialog, assembly metadata and add-in manifest.
+- about-window.md is unchanged.
+- The approved Release layout retains the manifest's root assembly path and requires dependency probing from AmberBIM for all supported frameworks.
+- Debug keeps its existing flat output.
+- There is no new STP, mockup, RPC contract or label in the delta. No test suite or visual contract is inferred.
 
 # Change list (implementation)
-- [x] Replace Info's TaskDialog with a modal WPF UI window owned by Revit.
-- [x] Show AmberBIM Tools, version 0.3, dynamic current-year copyright and author.
-- [x] Open the approved website using Windows shell association.
-- [x] Support closing with Zamknij, Escape and the window close button.
-- [x] Set assembly/file versions to 0.3.0.0 and manifest description to 0.3.
-- [x] Include compatible WPF UI dependencies in all build outputs, with resources scoped to the dialog.
+- [x] Move all Release output support files into AmberBIM, keeping only AmberBim.dll and AmberBim.addin at the root.
+- [x] Preserve nested dependency paths and include relocated files in MSBuild clean tracking.
+- [x] Resolve private dependencies from AmberBIM before creating the WPF window, without redirecting unrelated requesting assemblies.
+- [x] Preserve flat Debug layout and document Release deployment.
 
 # Verification
-- [x] Compile all 18 Revit 2021–2027 configurations.
-- [x] Inspect binaries, version metadata, manifest and dependency output.
-- [x] Render the WPF window outside Revit and verify close behavior and current-year text.
-- [ ] Revit integration has not been exercised inside Revit. The standalone preview verified native ownership, owner disabling and re-enabling.
+- [x] Compile all 18 Debug/Release variants and inspect each layout.
+- [x] Exercise dependency loading and the WPF window from an isolated Release deployment on net48, net8 and net10.
+- [x] Verify incremental build and Clean/Rebuild behavior.
+- [x] Verify Debug runtime and unrelated assembly requests remain unaffected.
 
 # Results
-- WPF-UI 4.3.0 is pinned. Dialog resources are scoped locally; no global Revit application resources are changed.
-- All 18 Debug/Release configurations compiled: 2021–2027 and net10 variants for 2025/2026.
-- All 18 outputs contain assembly/file version 0.3.0.0, the version 0.3 manifest, compiled AboutWindow XAML, WPF UI dependencies and the existing nine ribbon images. Autodesk DLLs are not copied.
-- Standalone previews on .NET Framework 4.8, .NET 8 and .NET 10 passed native owner/modal checks, version/current-year text checks and close-button, Escape and system-close checks. PNG previews were visually inspected.
-- Website handling uses the approved HTTPS URL with Windows shell execution; the browser was not launched during verification.
-- Existing compile warnings include unused CAD exception variables, deprecated solid-rebar API for Revit 2023, and installed Revit API dependency version conflicts. All builds succeeded.
-- Verification utilities, downloaded packages and screenshots remain in ignored .tools/; no new repository test suite was added.
-- The approved docs are unchanged.
+- All 18 Debug/Release builds succeeded, including both net8 and net10 variants for Revit 2025/2026.
+- Every Release output root contains only AmberBim.dll and AmberBim.addin. Dependencies, symbols, config and deps files are under AmberBIM. Debug retains the flat layout.
+- Relocated files participate in FileWrites tracking. Incremental builds, Clean and rebuilding were verified for Revit 2024/net48, 2025/net8 and 2027/net10. Clean removed all generated output files.
+- A separate layout fixture confirmed nested support-file paths are preserved.
+- Isolated preview hosts have no WPF UI package or add-in compile reference. Release previews on net48/net8/net10 instantiated the WPF window and confirmed WPF UI libraries load from AmberBIM. Modal ownership and button/Escape/system-close behavior passed.
+- Debug previews passed on all three frameworks with WPF UI loaded from the original flat directory.
+- Resolver checks reject unrelated requesting assemblies, unknown dependencies and mismatched dependency versions. Initialization is idempotent and shutdown unregisters the handler.
+- All 18 output inspections passed: x64/framework/API/version metadata, WPF UI dependencies, compiled XAML, existing ribbon images and manifest, and no copied Autodesk DLLs.
+- Integration inside Revit has not been exercised. Existing compilation warnings remain.
+- Verification scripts and fixture files stay in ignored .tools/; no repository test suite or docs changes were added.

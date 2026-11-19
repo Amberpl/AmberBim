@@ -48,6 +48,18 @@
     <Compile Remove="Rebar\RebarSolidInView.cs;Rebar\RebarNotSolidInView.cs" />
   </ItemGroup>
 
+  <Target Name="ArrangeReleaseFiles" AfterTargets="CopyFilesToOutputDirectory"
+          Condition="$(Configuration.StartsWith('Release')) and '$(DesignTimeBuild)' != 'true'">
+    <ItemGroup>
+      <ReleaseSupportFile Include="$(TargetDir)**\*"
+                          Exclude="$(TargetPath);$(TargetDir)AmberBim.addin;$(TargetDir)AmberBIM\**\*" />
+    </ItemGroup>
+    <Move SourceFiles="@(ReleaseSupportFile)"
+          DestinationFiles="@(ReleaseSupportFile->'$(TargetDir)AmberBIM\%(RecursiveDir)%(Filename)%(Extension)')">
+      <Output TaskParameter="MovedFiles" ItemName="FileWrites" />
+    </Move>
+  </Target>
+
   <Target Name="ValidateRevitBuild" BeforeTargets="PrepareForBuild">
     <Error Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(RevitVersion)', '^202[1-7]$'))"
            Text="Unsupported RevitVersion '$(RevitVersion)'. Choose a version from 2021 to 2027." />
