@@ -18,8 +18,6 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Structure;
 using Autodesk.Revit.UI;
-using Autodesk.Windows;
-using Xceed.Wpf.AvalonDock.Controls;
 #endregion
 
 #region Description
