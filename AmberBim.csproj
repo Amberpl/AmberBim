@@ -3,6 +3,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>AmberBim</RootNamespace>
     <AssemblyName>AmberBim</AssemblyName>
+    <Version>0.3.0</Version>
     <UseWPF>true</UseWPF>
     <PlatformTarget>x64</PlatformTarget>
     <Platforms>x64</Platforms>
@@ -13,6 +14,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Deterministic>true</Deterministic>
     <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**</DefaultItemExcludes>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin\Revit$(RevitVersion)\$(Configuration)\</OutputPath>
     <RevitApiPath Condition="'$(RevitApiPath)' == ''">$(ProgramW6432)\Autodesk\Revit $(RevitVersion)</RevitApiPath>
     <DebugSymbols>true</DebugSymbols>
@@ -25,6 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="WPF-UI" Version="4.3.0" />
     <Reference Include="RevitAPI">
       <HintPath>$(RevitApiPath)\RevitAPI.dll</HintPath>
       <Private>false</Private>

@@ -7,6 +7,6 @@
         <FullClassName>AmberBim.AmberBimRibbon</FullClassName>
         <Text>AmberBIM Tools</Text>  
         <VendorId>Mateusz Amber Ambrożewicz</VendorId>
-        <VendorDescription>AmberBIM Tools v.0.2</VendorDescription>
+        <VendorDescription>AmberBIM Tools v.0.3</VendorDescription>
         </AddIn>
 </RevitAddIns>
