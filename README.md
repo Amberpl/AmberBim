@@ -81,4 +81,22 @@ i manifestem. Debug zachowuje dotychczasowy płaski układ.
 
 Specyfikacja: [zgodność z Revitem](docs/revit-compatibility.md).
 
+## Ikony i motywy
+
+Każde polecenie ma ikony PNG 16×16 i 32×32 z przezroczystym tłem,
+w jasnym i ciemnym wariancie. Revit 2021–2023 zawsze korzysta z jasnych
+ikon i nie sprawdza motywu. Revit 2024–2027 dobiera ikony przy starcie
+i odświeża je po zmianie motywu interfejsu.
+
+Ikony są osadzone w DLL. Pliki PNG są w `Ico/Light` i `Ico/Dark`,
+a odpowiadające im źródła SVG w `Ico/Source`. Zestaw można odtworzyć
+narzędziem korzystającym z SDK .NET 10 na Windows:
+
+```powershell
+.\tools\GenerateRibbonIcons.ps1
+```
+
+Generator odtwarza PNG i SVG ze wspólnych definicji geometrycznych
+i zapisuje podgląd obu motywów w `.tools/ribbon-icons-preview.png`.
+
 
