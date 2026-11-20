@@ -117,12 +117,14 @@ namespace AmberBim.UiGallery
         public string CategoryName { get; }
         public bool IsSelected { get; set; }
         public string Status { get; }
+        public string StatusDescription { get; }
 
         public PreviewSchedule(string name, string category, bool readOnly = false)
         {
             Name = name;
             CategoryName = category;
-            Status = readOnly ? "Tylko do odczytu — zestawienie grupowane" : "Edycja parametrów";
+            Status = readOnly ? "Tylko do odczytu" : "Edytowalne";
+            StatusDescription = readOnly ? "Zestawienie grupowane — eksport tylko do odczytu" : "Możliwa edycja parametrów w Excelu";
         }
     }
 }

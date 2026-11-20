@@ -54,3 +54,9 @@
 - Added the preview to the gallery and Start-Gallery.ps1 -ScheduleExport for direct display.
 - The gallery was rebuilt and the export preview launched. No automated behavior/visual verification was performed: review remains with the user.
 - Production schedule export files and documentation are unchanged; this is a gallery design variant.
+# Export table readability refinement
+- User requested removing the hint below the table and making the table clearer.
+- Removed the lower hint and its layout row; kept the introduction above the table.
+- Added 40-DIP rows, 44-DIP headers, padded and vertically centered cell text, horizontal grid lines and subtle alternating backgrounds.
+- Increased space for schedule names, centered single-click selection checkboxes and shortened mode labels to Edytowalne / Tylko do odczytu; details remain in tooltips.
+- Rebuilt and displayed the export preview. User owns visual/behavior review; no automated checks were run.

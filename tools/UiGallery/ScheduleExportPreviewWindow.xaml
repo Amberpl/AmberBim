@@ -9,13 +9,19 @@
     <ui:FluentWindow.Resources>
         <ResourceDictionary><ResourceDictionary.MergedDictionaries>
             <ui:ThemesDictionary Theme="Light" /><ui:ControlsDictionary />
-        </ResourceDictionary.MergedDictionaries></ResourceDictionary>
+        </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="ScheduleCellText" TargetType="TextBlock">
+                <Setter Property="Margin" Value="12,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+        </ResourceDictionary>
     </ui:FluentWindow.Resources>
     <Grid>
         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
         <ui:TitleBar Title="Eksport zestawień do Excela" ShowMinimize="False" ShowMaximize="True" />
         <Grid Grid.Row="1" Margin="24,12,24,24">
-            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
             <StackPanel>
                 <TextBlock Text="Wybierz zestawienia" FontSize="24" FontWeight="SemiBold" />
                 <TextBlock Text="Każde zestawienie trafi do osobnego arkusza. Skoroszyt zawiera również arkusz Info z zasadami importu."
@@ -29,11 +35,33 @@
                 <TextBox x:Name="SearchBox" TextChanged="FilterChanged" VerticalContentAlignment="Center" ToolTip="Filtruj zestawienia po nazwie" />
             </DockPanel>
             <DataGrid Grid.Row="2" x:Name="SchedulesGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
-                      HeadersVisibility="Column" SelectionMode="Extended" EnableRowVirtualization="True">
+                      HeadersVisibility="Column" SelectionMode="Extended" EnableRowVirtualization="True"
+                      RowHeight="40" ColumnHeaderHeight="44" FontSize="14"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                      RowBackground="{DynamicResource ApplicationBackgroundBrush}"
+                      AlternatingRowBackground="{DynamicResource ControlFillColorSecondaryBrush}"
+                      CanUserResizeRows="False" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                        <Setter Property="Padding" Value="12,6" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="Wybór" Width="64" Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn Header="Zestawienie" Width="*" Binding="{Binding Name}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="220" Binding="{Binding CategoryName}" IsReadOnly="True" CanUserSort="False">
+                    <DataGridTemplateColumn Header="Wybór" Width="72" CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          AutomationProperties.Name="{Binding Name}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Zestawienie" Width="*" MinWidth="240" Binding="{Binding Name}"
+                                        ElementStyle="{StaticResource ScheduleCellText}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="220" Binding="{Binding CategoryName}" IsReadOnly="True" CanUserSort="False"
+                                        ElementStyle="{StaticResource ScheduleCellText}">
                         <DataGridTextColumn.Header>
                             <Grid Width="188">
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
@@ -45,12 +73,22 @@
                             </Grid>
                         </DataGridTextColumn.Header>
                     </DataGridTextColumn>
-                    <DataGridTextColumn Header="Tryb" Width="310" Binding="{Binding Status}" IsReadOnly="True"/>
+                    <DataGridTemplateColumn Header="Tryb" Width="180" SortMemberPath="Status">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                        CornerRadius="4" Padding="8,4" Margin="12,0"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Status}" FontSize="12"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                               ToolTip="{Binding StatusDescription}" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
-            <TextBlock Grid.Row="3" Margin="0,12,0,16" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                       Text="Zestawienia grupowane są tylko do odczytu. Kolumna A zawiera UniqueId elementów, ukryty wiersz 1 zawiera ID parametrów, a wiersz 2 — ich nazwy."/>
-            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
                 <ui:Button Content="Anuluj" IsCancel="True" Click="Cancel" MinWidth="100" Margin="0,0,10,0"/>
                 <ui:Button Content="Wybierz plik i eksportuj" IsDefault="True" Click="Accept" MinWidth="190"/>
             </StackPanel>
