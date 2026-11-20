@@ -22,3 +22,13 @@
   także w wersjach opartych na nowoczesnym .NET.
 - Polecenia Unobscured, Obscured i Reload DWG pozostają dostępne.
 - Manifest dodatku jest dołączany do wyniku kompilacji.
+
+## Układ plików Release
+- Każda konfiguracja Release zawiera na głównym poziomie
+  wyłącznie AmberBim.dll i AmberBim.addin.
+- Wszystkie pozostałe pliki wynikowe, w tym zależności,
+  symbole debugowania i pliki pomocnicze, znajdują się
+  w podfolderze AmberBIM.
+- Dodatek ładuje wymagane biblioteki z tego podfolderu
+  we wszystkich obsługiwanych wersjach Revita.
+- Konfiguracje Debug zachowują dotychczasowy układ plików.

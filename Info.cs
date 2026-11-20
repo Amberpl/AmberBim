@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using System.Windows.Interop;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
@@ -14,9 +15,8 @@ namespace AmberBim
         {
             try
             {
-                var window = new AboutWindow();
-                new WindowInteropHelper(window).Owner = commandData.Application.MainWindowHandle;
-                window.ShowDialog();
+                DependencyLoader.Initialize();
+                ShowWindow(commandData.Application);
                 return Result.Succeeded;
             }
             catch (Exception exception)
@@ -24,6 +24,14 @@ namespace AmberBim
                 message = exception.Message;
                 return Result.Failed;
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ShowWindow(UIApplication application)
+        {
+            var window = new AboutWindow();
+            new WindowInteropHelper(window).Owner = application.MainWindowHandle;
+            window.ShowDialog();
         }
     }
 }
