@@ -9,8 +9,8 @@ internal static class Program
 {
     private sealed record Shape(string Data, string? Fill, string? Stroke = null, double Width = 2, double Opacity = 1);
 
-    private static readonly string[] Names = { "Solid", "NotSolid", "Unobscured", "Obscured", "DwgOpen", "DwgReload", "About" };
-    private static readonly string[] Labels = { "Solid", "Not Solid", "Unobscured", "Obscured", "Open DWG", "Reload DWG", "About" };
+    private static readonly string[] Names = { "Solid", "NotSolid", "Unobscured", "Obscured", "DwgOpen", "DwgReload", "About", "ExcelExport", "ExcelImport" };
+    private static readonly string[] Labels = { "Solid", "Not Solid", "Unobscured", "Obscured", "Open DWG", "Reload DWG", "About", "Eksport XLSX", "Import XLSX" };
     private const string BarOutline = "M8,3 C5.2,3 3,5.2 3,8 L3,23 C3,26.3 5.7,29 9,29 L24,29 C26.8,29 29,26.8 29,24 C29,21.2 26.8,19 24,19 L13,19 L13,8 C13,5.2 10.8,3 8,3 Z";
     private const string DocumentOutline = "M7,3 H20 L27,10 V27 Q27,29 25,29 H7 Q5,29 5,27 V5 Q5,3 7,3 Z";
 
@@ -36,7 +36,7 @@ internal static class Program
         var preview = Path.Combine(root, ".tools", "ribbon-icons-preview.png");
         Directory.CreateDirectory(Path.GetDirectoryName(preview)!);
         SavePreview(root, preview);
-        Console.WriteLine("Generated 28 transparent PNG icons, 14 SVG sources and " + preview);
+        Console.WriteLine("Generated " + Names.Length * 4 + " transparent PNG icons, " + Names.Length * 2 + " SVG sources and " + preview);
     }
 
     private static List<Shape> GetShapes(string name)
@@ -65,11 +65,19 @@ internal static class Program
                     obscured.Add(new(Segment(t, t + 0.05), null, "accent", 2.4, 0.55));
                 return obscured;
             case "DwgOpen":
+            case "ExcelExport":
                 return new()
                 {
                     new(DocumentOutline, null, "outline"),
                     new("M20,3 V10 H27", null, "outline"),
                     new("M11,22 L21,12 M14,12 H21 V19", null, "accent", 2.8)
+                };
+            case "ExcelImport":
+                return new()
+                {
+                    new(DocumentOutline, null, "outline"),
+                    new("M20,3 V10 H27", null, "outline"),
+                    new("M21,13 L11,23 M11,16 V23 H18", null, "accent", 2.8)
                 };
             case "DwgReload":
                 return new()
@@ -156,7 +164,7 @@ internal static class Program
         RenderOptions.SetBitmapScalingMode(visual, BitmapScalingMode.NearestNeighbor);
         using (var drawing = visual.RenderOpen())
         {
-            drawing.DrawRectangle(Brushes.White, null, new Rect(0, 0, 1230, 555));
+            drawing.DrawRectangle(Brushes.White, null, new Rect(0, 0, Names.Length * 170 + 40, 555));
             Text(drawing, "AmberBIM — ikony 16 / 32 px", 24, 15, 24, Brushes.Black);
             for (var row = 0; row < 2; row++)
             {
@@ -164,7 +172,7 @@ internal static class Program
                 var y = 65 + row * 240;
                 var foreground = dark ? Brushes.WhiteSmoke : Brushes.Black;
                 drawing.DrawRoundedRectangle(new SolidColorBrush((Color)ColorConverter.ConvertFromString(dark ? "#2B2B2B" : "#F5F5F5")),
-                    null, new Rect(10, y, 1210, 225), 12, 12);
+                    null, new Rect(10, y, Names.Length * 170 + 20, 225), 12, 12);
                 Text(drawing, dark ? "DARK" : "LIGHT", 24, y + 10, 14, foreground);
                 for (var i = 0; i < Names.Length; i++)
                 {
@@ -179,7 +187,7 @@ internal static class Program
                 }
             }
         }
-        var preview = new RenderTargetBitmap(1230, 555, 96, 96, PixelFormats.Pbgra32);
+        var preview = new RenderTargetBitmap(Names.Length * 170 + 40, 555, 96, 96, PixelFormats.Pbgra32);
         preview.Render(visual);
         SavePng(path, preview);
     }

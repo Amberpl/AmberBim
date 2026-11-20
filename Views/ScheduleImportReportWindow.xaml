@@ -1,0 +1,25 @@
+<ui:FluentWindow x:Class="AmberBim.Views.ScheduleImportReportWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="AmberBIM — import zestawień" Width="720" Height="520" MinWidth="560" MinHeight="380"
+                 WindowStartupLocation="CenterOwner" ShowInTaskbar="False" ExtendsContentIntoTitleBar="True"
+                 Background="{DynamicResource ApplicationBackgroundBrush}" Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ui:FluentWindow.Resources>
+        <ResourceDictionary><ResourceDictionary.MergedDictionaries>
+            <ui:ThemesDictionary Theme="Light"/><ui:ControlsDictionary/>
+        </ResourceDictionary.MergedDictionaries></ResourceDictionary>
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <ui:TitleBar Title="AmberBIM — import zestawień" ShowMinimize="False" ShowMaximize="True"/>
+        <Grid Grid.Row="1" Margin="24,12,24,24">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <TextBlock x:Name="StatusText" FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            <TextBlock Grid.Row="1" x:Name="CountsText" Margin="0,16,0,16" TextWrapping="Wrap"/>
+            <TextBox Grid.Row="2" x:Name="DetailsText" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            <ui:Button Grid.Row="3" Content="Zamknij" IsDefault="True" IsCancel="True" HorizontalAlignment="Right"
+                       MinWidth="100" Margin="0,16,0,0" Click="CloseReport"/>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

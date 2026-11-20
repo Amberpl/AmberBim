@@ -99,4 +99,33 @@ narzędziem korzystającym z SDK .NET 10 na Windows:
 Generator odtwarza PNG i SVG ze wspólnych definicji geometrycznych
 i zapisuje podgląd obu motywów w `.tools/ribbon-icons-preview.png`.
 
+## Zestawienia i Excel
+
+Dodatek kompiluje się dla Revita 2021–2027, w tym wariantów .NET 8 i .NET 10
+dla Revita 2025–2026. Weryfikacja działania na modelu w Revicie pozostaje
+do wykonania; testy XLSX i walidacji można uruchomić niezależnie od Revita.
+
+Panel Excel znajduje się przed panelem Info. Eksport zapisuje wybrane
+zestawienia do osobnych arkuszy XLSX oraz dodaje arkusz Info z instrukcją.
+Pierwsze zestawienie jest aktywnym arkuszem, a Info znajduje się na końcu
+widocznych arkuszy. Domyślna nazwa pliku pochodzi od pierwszego wybranego
+zestawienia. Udany eksport nie wyświetla dodatkowego komunikatu.
+Lista wyboru zawiera kategorię oraz filtr w jej nagłówku, działający razem
+z wyszukiwaniem po nazwie i zachowujący zaznaczenia.
+Jasnoniebieskie komórki oznaczają parametry typu; szary tekst wskazuje
+pola tylko do odczytu. Zmiana parametru typu dotyczy wszystkich wystąpień.
+Raport importu pojawia się w oknie WPF UI z liczbą zmian, pominięciami i błędami.
+Kolumna A zestawienia jest ukryta i zawiera UniqueId elementu. Ukryty
+wiersz 1 zawiera ID parametrów, a widoczny wiersz 2 — ich nazwy.
+Import używa ID; zmiana nazwy nagłówka nie zmienia powiązania parametru.
+Przenosząc kolumny, przenoś je w całości wraz z ukrytym wierszem 1.
+
+Po aktualizacji dodatku wyeksportuj plik ponownie. Starsze pliki
+z mapowaniem po nazwach nie są importowane przez nowy format.
+Zwykłe zestawienia szczegółowe z polami parametrów otrzymują wiersze
+bezpośrednio z elementów, również przy jednakowych wartościach.
+Zestawienia grupowane są tylko do odczytu. Jeśli powiązanie złożonej
+tabeli z polami obliczanymi lub podsumowaniami jest niejednoznaczne,
+eksport jest przerywany, aby nie przypisać niewłaściwych ID.
+
 
