@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="Views\WpfUi.props" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <RootNamespace>AmberBim</RootNamespace>
@@ -13,7 +14,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <Deterministic>true</Deterministic>
-    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**;tools\**</DefaultItemExcludes>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin\Revit$(RevitVersion)\$(Configuration)\</OutputPath>
     <RevitApiPath Condition="'$(RevitApiPath)' == ''">$(ProgramW6432)\Autodesk\Revit $(RevitVersion)</RevitApiPath>
@@ -27,7 +28,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WPF-UI" Version="4.3.0" />
+    <PackageReference Include="WPF-UI" Version="$(WpfUiVersion)" />
     <Reference Include="RevitAPI">
       <HintPath>$(RevitApiPath)\RevitAPI.dll</HintPath>
       <Private>false</Private>

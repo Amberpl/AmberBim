@@ -1,0 +1,154 @@
+<ui:FluentWindow x:Class="AmberBim.UiGallery.ScheduleExportPreviewWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="Eksport zestawień do Excela" Width="1100" Height="580" MinWidth="900" MinHeight="420"
+                 WindowStartupLocation="CenterOwner" ShowInTaskbar="False" ExtendsContentIntoTitleBar="True"
+                 PreviewKeyDown="HandleKey" Background="{DynamicResource ApplicationBackgroundBrush}"
+                 Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ui:FluentWindow.Resources>
+        <ResourceDictionary><ResourceDictionary.MergedDictionaries>
+            <ui:ThemesDictionary Theme="Light" /><ui:ControlsDictionary />
+        </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="ScheduleSelectionBrush"
+                             Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}" Opacity="0.12" />
+            <Style x:Key="ScheduleCellText" TargetType="TextBlock">
+                <Setter Property="Margin" Value="12,0" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            </Style>
+        </ResourceDictionary>
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <ui:TitleBar Title="Eksport zestawień do Excela" ShowMinimize="False" ShowMaximize="True" />
+        <Grid Grid.Row="1" Margin="24,12,24,24">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="Wybierz zestawienia" FontSize="24" FontWeight="SemiBold" />
+                <TextBlock Text="Każde zestawienie trafi do osobnego arkusza. Skoroszyt zawiera również arkusz Info z zasadami importu."
+                           TextWrapping="Wrap" Margin="0,6,0,14" />
+            </StackPanel>
+            <DockPanel Grid.Row="1" Margin="0,0,0,12">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <ui:Button Content="Zaznacz widoczne" Click="SelectVisible" Margin="12,0,6,0"/>
+                    <ui:Button Content="Odznacz wszystkie" Click="ClearSelection"/>
+                </StackPanel>
+                <TextBox x:Name="SearchBox" TextChanged="FilterChanged" VerticalContentAlignment="Center" ToolTip="Filtruj zestawienia po nazwie" />
+            </DockPanel>
+            <DataGrid Grid.Row="2" x:Name="SchedulesGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                      HeadersVisibility="Column" SelectionMode="Extended" EnableRowVirtualization="True"
+                      RowHeight="40" ColumnHeaderHeight="44" FontSize="14"
+                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                      RowBackground="{DynamicResource ApplicationBackgroundBrush}"
+                      AlternatingRowBackground="{DynamicResource ControlFillColorSecondaryBrush}"
+                      CanUserResizeRows="False" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridRow">
+                                    <Border Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                        <DataGridCellsPresenter SnapsToDevicePixels="True" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource ControlFillColorSecondaryBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource ScheduleSelectionBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Grid Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                          SnapsToDevicePixels="True" />
+                                        <Border x:Name="FocusOutline" BorderThickness="1" Visibility="Collapsed"
+                                                BorderBrush="{DynamicResource AccentTextFillColorPrimaryBrush}"
+                                                IsHitTestVisible="False" />
+                                    </Grid>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                            <Setter TargetName="FocusOutline" Property="Visibility" Value="Visible" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </DataGrid.CellStyle>
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                        <Setter Property="Padding" Value="12,6" />
+                        <Setter Property="FontWeight" Value="SemiBold" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Wybór" Width="72" CanUserSort="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          AutomationProperties.Name="{Binding Name}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Zestawienie" Width="*" MinWidth="240" Binding="{Binding Name}"
+                                        ElementStyle="{StaticResource ScheduleCellText}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="220" Binding="{Binding CategoryName}" IsReadOnly="True" CanUserSort="False"
+                                        ElementStyle="{StaticResource ScheduleCellText}">
+                        <DataGridTextColumn.Header>
+                            <Grid Width="188">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="Kategoria" VerticalAlignment="Center"/>
+                                <ui:Button x:Name="CategoryFilterButton" Grid.Column="1" Appearance="Transparent"
+                                           Icon="{ui:SymbolIcon Filter24}" Click="OpenCategoryFilter"
+                                           ToolTip="Filtruj zestawienia po kategorii" AutomationProperties.Name="Filtr kategorii"
+                                           Padding="6"/>
+                            </Grid>
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Tryb" Width="180" SortMemberPath="Status">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource ControlFillColorSecondaryBrush}"
+                                        CornerRadius="4" Padding="8,4" Margin="12,0"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Status}" FontSize="12"
+                                               Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                                               ToolTip="{Binding StatusDescription}" />
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+                <ui:Button Content="Anuluj" IsCancel="True" Click="Cancel" MinWidth="100" Margin="0,0,10,0"/>
+                <ui:Button Content="Wybierz plik i eksportuj" IsDefault="True" Click="Accept" MinWidth="190"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

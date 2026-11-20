@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <WpfUiVersion>4.3.0</WpfUiVersion>
+  </PropertyGroup>
+</Project>
