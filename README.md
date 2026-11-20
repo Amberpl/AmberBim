@@ -1,6 +1,6 @@
 # AmberBim
 
-Dodatek do Autodesk Revit 2021–2027.
+Dodatek do Autodesk Revit 2021–2027, wersja 0.3.
 
 ## Kompilacja
 
@@ -67,6 +67,11 @@ W wersjach 2024–2027 te przyciski są pominięte ze względu na usunięcie
 odpowiedniego API. Wyświetlaniem zbrojenia steruje wtedy Revit.
 `Unobscured`, `Obscured`, otwieranie i przeładowanie DWG pozostają dostępne.
 DWG otwiera się w aplikacji skojarzonej z plikiem w Windows.
+
+Okno informacji korzysta z WPF i WPF UI 4.3.0. Wyświetla wersję dodatku
+oraz bieżący rok kalendarzowy. Przy wdrażaniu kopiuj także biblioteki
+`Wpf.Ui.dll`, `Wpf.Ui.Abstractions.dll` i pozostałe zależności z katalogu
+wynikowego właściwej konfiguracji.
 
 Specyfikacja: [zgodność z Revitem](docs/revit-compatibility.md).
 
