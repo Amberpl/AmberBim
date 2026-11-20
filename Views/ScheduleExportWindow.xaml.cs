@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
 using AmberBim.ScheduleExcel;
 using FluentWindow = Wpf.Ui.Controls.FluentWindow;
 
@@ -11,6 +14,7 @@ namespace AmberBim.Views
     public partial class ScheduleExportWindow : FluentWindow
     {
         private readonly IReadOnlyList<ScheduleInfo> schedules;
+        private string selectedCategoryId;
         public IReadOnlyList<string> SelectedIds => schedules.Where(s => s.IsSelected).Select(s => s.UniqueId).ToList();
 
         public ScheduleExportWindow(IReadOnlyList<ScheduleInfo> schedules)
@@ -18,9 +22,6 @@ namespace AmberBim.Views
             InitializeComponent();
             this.schedules = schedules;
             SchedulesGrid.ItemsSource = schedules;
-            CategoryFilter.ItemsSource = new[] { new ScheduleInfo { CategoryName = "Wszystkie kategorie" } }
-                .Concat(schedules.GroupBy(s => s.CategoryId).Select(g => g.First()).OrderBy(s => s.CategoryName)).ToList();
-            CategoryFilter.SelectedIndex = 0;
         }
 
         private void FilterChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -28,9 +29,29 @@ namespace AmberBim.Views
             ApplyFilter();
         }
 
-        private void CategoryChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void OpenCategoryFilter(object sender, RoutedEventArgs e)
         {
-            ApplyFilter();
+            var menu = new ContextMenu { PlacementTarget = CategoryFilterButton, Placement = PlacementMode.Bottom };
+            AddCategory(menu, "Wszystkie kategorie", null);
+            menu.Items.Add(new Separator());
+            foreach (var category in schedules.GroupBy(s => s.CategoryId).Select(g => g.First()).OrderBy(s => s.CategoryName))
+                AddCategory(menu, category.CategoryName, category.CategoryId);
+            CategoryFilterButton.ContextMenu = menu;
+            menu.IsOpen = true;
+        }
+
+        private void AddCategory(ContextMenu menu, string label, string categoryId)
+        {
+            var item = new MenuItem { Header = label, IsCheckable = true, IsChecked = selectedCategoryId == categoryId };
+            item.Click += delegate
+            {
+                selectedCategoryId = categoryId;
+                CategoryFilterButton.Foreground = (Brush)FindResource(categoryId == null
+                    ? "TextFillColorPrimaryBrush" : "AccentTextFillColorPrimaryBrush");
+                CategoryFilterButton.ToolTip = categoryId == null ? "Filtruj zestawienia po kategorii" : "Kategoria: " + label;
+                ApplyFilter();
+            };
+            menu.Items.Add(item);
         }
 
         private void CommitSelection()
@@ -44,9 +65,8 @@ namespace AmberBim.Views
             if (SchedulesGrid == null || SchedulesGrid.ItemsSource == null) return;
             CommitSelection();
             var search = SearchBox.Text.Trim();
-            var categoryId = (CategoryFilter.SelectedItem as ScheduleInfo)?.CategoryId;
             CollectionViewSource.GetDefaultView(SchedulesGrid.ItemsSource).Filter = item =>
-                ScheduleSelection.Matches((ScheduleInfo)item, search, categoryId);
+                ScheduleSelection.Matches((ScheduleInfo)item, search, selectedCategoryId);
         }
 
         private void SelectVisible(object sender, RoutedEventArgs e)
