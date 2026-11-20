@@ -12,6 +12,8 @@ namespace AmberBim.UiGallery
             gallery.Show();
             if (Array.IndexOf(e.Args, "--compact-info") >= 0)
                 new CompactAboutWindow { Owner = gallery }.ShowDialog();
+            else if (Array.IndexOf(e.Args, "--schedule-export") >= 0)
+                new ScheduleExportPreviewWindow { Owner = gallery }.ShowDialog();
         }
     }
 }

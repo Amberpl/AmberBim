@@ -47,3 +47,10 @@
 - Start-Gallery.ps1 -CompactInfo displays the compact window directly for user review.
 - The gallery was rebuilt and launched with that preview. Per user instruction, no automated behavior or visual checks were run; the user owns verification.
 - The approved gallery specification and freeze remain unchanged; this is an exploratory layout refinement.
+# Schedule export preview
+- User requested displaying the schedule export window with a funnel icon replacing the category dropdown.
+- Added a standalone gallery preview based on the existing ScheduleExportWindow layout, using example schedules and no Revit dependencies.
+- The category header funnel opens a checked category menu with an All Categories option; the selected category combines with name search and highlights the funnel.
+- Added the preview to the gallery and Start-Gallery.ps1 -ScheduleExport for direct display.
+- The gallery was rebuilt and the export preview launched. No automated behavior/visual verification was performed: review remains with the user.
+- Production schedule export files and documentation are unchanged; this is a gallery design variant.

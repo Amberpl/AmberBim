@@ -22,6 +22,12 @@ namespace AmberBim.UiGallery
 
         private void UpdateSelection()
         {
+            if (Variants.SelectedIndex == 2)
+            {
+                VariantTitle.Text = "Eksport zestawień";
+                VariantDescription.Text = "Wybór zestawień i filtr kategorii pod ikoną lejka w nagłówku kolumny.";
+                return;
+            }
             var compact = Variants.SelectedIndex == 1;
             VariantTitle.Text = compact ? "Info · kompaktowe" : "Info · obecne";
             VariantDescription.Text = compact
@@ -42,6 +48,11 @@ namespace AmberBim.UiGallery
 
         private void ShowPreview()
         {
+            if (Variants.SelectedIndex == 2)
+            {
+                new ScheduleExportPreviewWindow { Owner = this }.ShowDialog();
+                return;
+            }
             Window preview = Variants.SelectedIndex == 1
                 ? (Window)new CompactAboutWindow()
                 : new AboutWindow();

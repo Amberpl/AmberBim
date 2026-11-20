@@ -28,9 +28,10 @@
             </Grid.ColumnDefinitions>
             <ListBox x:Name="Variants" SelectedIndex="1"
                      SelectionChanged="SelectVariant" MouseDoubleClick="OpenSelectedVariant"
-                     VerticalAlignment="Top" AutomationProperties.Name="Wariant okna Info">
+                     VerticalAlignment="Top" AutomationProperties.Name="Okna i warianty">
                 <ListBoxItem Content="Info · obecne" Padding="12" />
                 <ListBoxItem Content="Info · kompaktowe" Padding="12" />
+                <ListBoxItem Content="Eksport zestawień" Padding="12" />
             </ListBox>
             <StackPanel Grid.Column="2">
                 <TextBlock x:Name="VariantTitle" FontSize="20" FontWeight="SemiBold" />

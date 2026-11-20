@@ -1,4 +1,4 @@
-param([switch]$CompactInfo)
+param([switch]$CompactInfo, [switch]$ScheduleExport)
 
 $ErrorActionPreference = 'Stop'
 $galleryProject = Join-Path $PSScriptRoot 'UiGallery.csproj'
@@ -30,7 +30,9 @@ $supportedSdk = & $dotnetExecutable --list-sdks | Where-Object { $_ -match '^(\d
 if (-not $supportedSdk) {
     throw 'Brak .NET SDK 10 lub nowszego. Samo środowisko uruchomieniowe .NET nie wystarcza do zbudowania galerii.'
 }
-if ($CompactInfo) {
+if ($ScheduleExport) {
+    & $dotnetExecutable run --project $galleryProject --configuration Release -- --schedule-export
+} elseif ($CompactInfo) {
     & $dotnetExecutable run --project $galleryProject --configuration Release -- --compact-info
 } else {
     & $dotnetExecutable run --project $galleryProject --configuration Release
