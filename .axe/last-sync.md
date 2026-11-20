@@ -1,34 +1,35 @@
 # Docs changes since last sync
-- Added: docs/about-window.md
-- Deleted: none
-- Modified: none
+- Added: docs/ui-gallery.md.
+- Deleted: none.
+- Modified: none.
 
 # Consistency
-- The approved about-window specification is the complete delta; revit-compatibility.md is unchanged.
-- docs/main.md, docs/arch.md, a visual mockup and STP do not exist. No pixel contract or new test suite is inferred; the approved behavior is implemented using standard WPF UI controls.
-- The website URL matches the approved external destination.
-- Version 0.3 must agree between the dialog, assembly metadata and add-in manifest.
+- Scope: standalone gallery and the current/compact Info variants only.
+- Existing AboutWindow is available from the about-window feature branch; the gallery PR is stacked on that branch.
+- docs/main.md, docs/arch.md, DESIGN.md and a formal compact visual contract are absent in this checkout. The accepted gallery specification defines behavior; the compact layout is an exploratory native preview following the sketch discussed in chat.
+- No links, RPC contracts or explicit labels are introduced by ui-gallery.md.
+- No STP is supplied; no test suite is added.
 
 # Change list (implementation)
-- [x] Replace Info's TaskDialog with a modal WPF UI window owned by Revit.
-- [x] Show AmberBIM Tools, version 0.3, dynamic current-year copyright and author.
-- [x] Open the approved website using Windows shell association.
-- [x] Support closing with Zamknij, Escape and the window close button.
-- [x] Set assembly/file versions to 0.3.0.0 and manifest description to 0.3.
-- [x] Include compatible WPF UI dependencies in all build outputs, with resources scoped to the dialog.
+- [x] Create a standalone WPF executable without a Revit project/assembly dependency.
+- [x] Share the existing AboutWindow source files and WPF UI version with the add-in.
+- [x] Add an independently selectable compact Info variant with the same information/actions.
+- [x] Open modal previews and return to the gallery after closing them.
+- [x] Exclude gallery sources from the add-in build.
 
 # Verification
-- [x] Compile all 18 Revit 2021–2027 configurations.
-- [x] Inspect binaries, version metadata, manifest and dependency output.
-- [x] Render the WPF window outside Revit and verify close behavior and current-year text.
-- [ ] Revit integration has not been exercised inside Revit. The standalone preview verified native ownership, owner disabling and re-enabling.
+- [x] Build the gallery and inspect output/dependencies for Autodesk references.
+- [x] Launch the gallery; inspect both Info variants and verify close/Escape/link behavior.
+- [x] Confirm the existing AboutWindow files and approved specification remain unchanged.
+- [x] Update freeze after successful verification.
 
 # Results
-- WPF-UI 4.3.0 is pinned. Dialog resources are scoped locally; no global Revit application resources are changed.
-- All 18 Debug/Release configurations compiled: 2021–2027 and net10 variants for 2025/2026.
-- All 18 outputs contain assembly/file version 0.3.0.0, the version 0.3 manifest, compiled AboutWindow XAML, WPF UI dependencies and the existing nine ribbon images. Autodesk DLLs are not copied.
-- Standalone previews on .NET Framework 4.8, .NET 8 and .NET 10 passed native owner/modal checks, version/current-year text checks and close-button, Escape and system-close checks. PNG previews were visually inspected.
-- Website handling uses the approved HTTPS URL with Windows shell execution; the browser was not launched during verification.
-- Existing compile warnings include unused CAD exception variables, deprecated solid-rebar API for Revit 2023, and installed Revit API dependency version conflicts. All builds succeeded.
-- Verification utilities, downloaded packages and screenshots remain in ignored .tools/; no new repository test suite was added.
-- The approved docs are unchanged.
+- Standalone Release build passed with zero warnings/errors; dependencies are WPF UI 4.3.0 and WPF UI Abstractions 4.3.0 only, with no Autodesk or add-in assembly dependency.
+- Debug2024 add-in build passed; two pre-existing CS0168 warnings remain in CAD commands.
+- Native WPF verification exercised both gallery factory selections, modal ownership, version/year, real hyperlink navigation, close buttons, Escape and return to the enabled gallery.
+- Current Info measures 460 x 430 DIP; compact Info measures 380 x 261 DIP. Explicit compact minimum dimensions override WPF UI's default 460 x 320 minimum.
+- Both rendered window contents were inspected. Formal pixel comparison is not claimed: no approved native compact visual contract exists.
+- The original AboutWindow XAML/code-behind and accepted docs/ui-gallery.md are unchanged.
+- Local verification helpers and rendered images stay in ignored .tools/; no test suite is committed.
+- Start-Gallery.ps1 successfully launched the actual executable using the shared local SDK from the main worktree, even with a runtime-only system dotnet on PATH.
+- Freeze updated after successful compilation and native behavior verification.
