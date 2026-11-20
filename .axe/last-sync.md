@@ -60,3 +60,8 @@
 - Added 40-DIP rows, 44-DIP headers, padded and vertically centered cell text, horizontal grid lines and subtle alternating backgrounds.
 - Increased space for schedule names, centered single-click selection checkboxes and shortened mode labels to Edytowalne / Tylko do odczytu; details remain in tooltips.
 - Rebuilt and displayed the export preview. User owns visual/behavior review; no automated checks were run.
+# Stable export row selection
+- User reported selected rows shifting horizontally.
+- Replaced inherited row/cell templates with fixed geometry: zero margins/padding/borders, a stationary cells presenter and background-only row selection/hover states.
+- Keyboard focus uses an overlay outline that does not change the content layout.
+- Rebuilt and displayed the export preview. No interaction or visual checks were run; verification remains with the user.
