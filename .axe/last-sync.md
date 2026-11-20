@@ -45,3 +45,12 @@ Freeze stays unchanged until required verification succeeds.
 - Added version-specific API adapters for numeric ElementId values, parameter data types, measurable specs and Yes/No parameters; modern IDs remain 64-bit.
 - All 18 configurations passed: Debug/Release 2021–2027 plus .NET 10 variants for 2025 and 2026. API versions match each configuration.
 - No native Revit sessions were launched; freeze remains unchanged pending native verification.
+
+# Promotion of accepted native window designs
+- User approved both gallery windows and explicitly requested implementing them in the add-in.
+- Promoted compact Info, including aligned website/Close footer and 20-DIP outer margins.
+- Promoted export layout, funnel category menu, clear table, stationary row selection and removal of the lower hint.
+- Real export schedules continue to use CategoryId filtering, combined name search and selection persistence; compact mode labels use ReadOnly and show the existing reason in the tooltip.
+- Existing real export acceptance, cancel behavior, modal owner and Info handlers are preserved.
+- No documentation was edited; the accepted native gallery designs are the visual reference for this requested promotion. Native Revit checks remain assigned to the user; no automated tests or UI interaction checks are run. Freeze stays unchanged pending that verification.
+- Release2024 (.NET Framework 4.8), Release2026 (.NET 8) and Release2027 (.NET 10) compiled successfully with the promoted views. Existing CAD unused-variable warnings and assembly-reference conflict warnings remain. No Revit sessions or automated tests were run.
