@@ -73,6 +73,12 @@ oraz bieżący rok kalendarzowy. Przy wdrażaniu kopiuj także biblioteki
 `Wpf.Ui.dll`, `Wpf.Ui.Abstractions.dll` i pozostałe zależności z katalogu
 wynikowego właściwej konfiguracji.
 
+W konfiguracjach Release na głównym poziomie są tylko `AmberBim.dll`
+i `AmberBim.addin`. Wszystkie pozostałe pliki wynikowe są w podfolderze
+`AmberBIM`, z którego dodatek ładuje swoje zależności. Przy wdrażaniu
+zachowaj tę strukturę i kopiuj cały folder `AmberBIM` razem z DLL
+i manifestem. Debug zachowuje dotychczasowy płaski układ.
+
 Specyfikacja: [zgodność z Revitem](docs/revit-compatibility.md).
 
 

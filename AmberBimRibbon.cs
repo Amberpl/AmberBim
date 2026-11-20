@@ -39,6 +39,7 @@ namespace AmberBim
         /// </summary>
         public Result OnShutdown(UIControlledApplication app)
         {
+            DependencyLoader.Shutdown();
             return Result.Succeeded;
         }
 
@@ -47,6 +48,7 @@ namespace AmberBim
         /// </summary>
         public Result OnStartup(UIControlledApplication app)
         {
+            DependencyLoader.Initialize();
             // Externail application directory
             string dir = Path.GetDirectoryName(
                 System.Reflection.Assembly
