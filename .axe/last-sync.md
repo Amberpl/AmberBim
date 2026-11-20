@@ -27,9 +27,16 @@
 - Standalone Release build passed with zero warnings/errors; dependencies are WPF UI 4.3.0 and WPF UI Abstractions 4.3.0 only, with no Autodesk or add-in assembly dependency.
 - Debug2024 add-in build passed; two pre-existing CS0168 warnings remain in CAD commands.
 - Native WPF verification exercised both gallery factory selections, modal ownership, version/year, real hyperlink navigation, close buttons, Escape and return to the enabled gallery.
-- Current Info measures 460 x 430 DIP; compact Info measures 380 x 261 DIP. Explicit compact minimum dimensions override WPF UI's default 460 x 320 minimum.
+- Current Info measures 460 x 430 DIP; compact Info measures 380 x 213 DIP. Explicit compact minimum dimensions override WPF UI's default 460 x 320 minimum.
 - Both rendered window contents were inspected. Formal pixel comparison is not claimed: no approved native compact visual contract exists.
 - The original AboutWindow XAML/code-behind and accepted docs/ui-gallery.md are unchanged.
 - Local verification helpers and rendered images stay in ignored .tools/; no test suite is committed.
 - Start-Gallery.ps1 successfully launched the actual executable using the shared local SDK from the main worktree, even with a runtime-only system dotnet on PATH.
 - Freeze updated after successful compilation and native behavior verification.
+
+
+# Compact preview refinement
+- User requested moving Close upwards and placing the website link at the bottom.
+- Close is aligned beside the author/copyright group; the link is the last content row.
+- Gallery specification and freeze are unchanged: this refines the exploratory compact variant within the accepted scope.
+- Rebuilt and inspected the compact render; native Close/Escape/link checks passed for both variants.

@@ -29,17 +29,26 @@
                                Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
             </Grid>
-            <TextBlock Text="Mateusz Amber Ambrożewicz" FontSize="14" Margin="0,16,0,0" />
-            <TextBlock x:Name="CopyrightText" FontSize="12" Margin="0,2,0,0"
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-            <TextBlock FontSize="14" Margin="0,12,0,0">
+            <Grid Margin="0,16,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="12" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Mateusz Amber Ambrożewicz" FontSize="14" />
+                    <TextBlock x:Name="CopyrightText" FontSize="12" Margin="0,2,0,0"
+                               Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+                <ui:Button x:Name="CloseButton" Grid.Column="2" Content="Zamknij" Appearance="Secondary"
+                           IsCancel="True" IsDefault="True" Click="CloseWindow"
+                           VerticalAlignment="Center" MinWidth="88" />
+            </Grid>
+            <TextBlock FontSize="14" Margin="0,16,0,0">
                 <Hyperlink NavigateUri="https://amberbim.wordpress.com" RequestNavigate="OpenWebsite">
                     amberbim.wordpress.com
                 </Hyperlink>
             </TextBlock>
-            <ui:Button x:Name="CloseButton" Content="Zamknij" Appearance="Secondary"
-                       IsCancel="True" IsDefault="True" Click="CloseWindow"
-                       HorizontalAlignment="Right" MinWidth="88" Margin="0,20,0,0" />
         </StackPanel>
     </Grid>
 </ui:FluentWindow>
