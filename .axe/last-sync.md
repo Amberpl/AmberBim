@@ -1,35 +1,47 @@
 # Docs changes since last sync
-- Added: docs/ribbon-icons.md, docs/mockup/DESIGN.md, docs/mockup/ribbon-icons.png (binary reference, recorded by hash).
-- Deleted: none
-- Modified: none
+- Added: docs/schedule-excel/sdd.md and docs/schedule-excel/stp.md.
+- Modified/deleted: none.
+
+# Approved delta, 2026-11-20: export presentation and categories
+- SDD and STP agree on schedule-based filenames, no export success dialog, schedules before Info, type-cell colors, WPF UI import report, category display and combined filtering.
+- [x] Implement workbook order, styles, filename and import report.
+- [x] Implement schedule category and category header filter preserving selection.
+- [x] Verify standalone STP cases and compile Release2024.
+- All 12 standalone scenario groups passed, including OpenXML schema validation, active schedule / Info order, type and readonly styling, filename sanitization, combined category/name filters and preserved selection.
+- Release2024 compiled; two pre-existing CAD CS0168 warnings remain. Native category extraction, filtering interaction and report appearance await user testing in Revit 2024.
+- Native verification remains assigned to the user; freeze stays unchanged.
 
 # Consistency
-- The design link resolves to the accepted seven-icon light/dark board.
-- Legacy commands remain limited to 2021–2023; icon changes do not add or remove commands.
-- 2021–2023 always use light assets with no theme access or subscription. 2024–2027 select at startup and update on ThemeChanged.
-- Existing about-window and Revit compatibility specifications are unchanged.
-- docs/main.md, docs/arch.md and an STP do not exist. The approved behavior/design files are the bounded delta. No new labels or test suite are inferred.
+- The accepted scope is XLSX files, multiple selected schedules, immediate validated import and grouped/read-only schedules skipped during import.
+- There is no docs/main.md / docs/arch.md or approved visual mockup for this service. Standard existing WPF UI controls implement the behavioral flow; no new layout contract is inferred.
+- The user subsequently authorized building the remaining Revit versions and publishing the feature branch through a PR. Native testing remains assigned to the user.
 
-# Change list (implementation)
-- [x] Produce 28 transparent PNG resources: seven icons, two themes, 16/32 px, following the accepted board.
-- [x] Keep reproducible vector sources and generation tooling for precise small-size rendering.
-- [x] Assign Image and LargeImage on all actual ribbon buttons, including stacked items.
-- [x] Compile theme detection/events only for Revit 2024–2027, with startup selection and shutdown unsubscription.
-- [x] Keep Revit 2021–2023 light-only without theme calls.
+# Implementation
+- [x] XLSX writer/reader with model metadata, UniqueId in hidden column A and parameter IDs in hidden row 1 (format 2).
+- [x] Import validation/planning with units, conflicts, duplicate targets, read-only handling and idempotency.
+- [x] Revit schedule extraction and atomic model transaction implemented; native model verification remains pending user testing.
+- [x] Ribbon export/import commands and WPF multi-schedule selection. Excel panel precedes Info as requested.
 
-# Verification
-- [x] Inspect both themes at native sizes and compare the family to the accepted design board.
-- [x] Validate PNG dimensions, transparency, resource loading and light/dark differences.
-- [x] Compile all 18 configurations and inspect legacy/modern API references.
-- [x] Verify theme resource changes with standalone previews; actual Revit theme event integration remains unexercised.
+# Verification from STP
+- [x] Workbook roundtrip, multiple sheets, naming, Unicode/numbers and moved rows/columns.
+- [x] Read-only grouped schedules, text/numeric/bool/type updates and units in standalone tests.
+- [x] Wrong model, invalid IDs/values, duplicates, stale values and idempotency in standalone tests.
+- [x] Atomic rollback contract checked with an injected write failure; native transaction check remains pending.
+- [x] Debug2024 compiled during initial development; current corrected implementation compiled as Release2024.
+- [ ] Actual Revit 2024 model export/import checks.
 
-# Results
-- Added 28 transparent PNG resources (7 symbols × 2 themes × 2 sizes), 14 corresponding SVGs and deterministic WPF geometry-based generation tooling. The native-size light/dark preview was visually compared with the approved board; obscured bars retain visible gaps.
-- Image and LargeImage are assigned to actual PushButton objects, including both stacked rebar pairs. Frozen bitmaps are cached and reused when a theme returns.
-- Revit 2021–2023 binaries contain no UIThemeManager.CurrentTheme calls, ThemeChanged subscriptions/unsubscriptions or theme handler. They always initialize light icons.
-- Revit 2024–2027 binaries contain startup theme selection, ThemeChanged subscription/update and shutdown unsubscription. Repeated notifications for the same theme reuse existing images.
-- All 18 Debug/Release configurations compiled and passed metadata/resource inspections. All 28 new PNGs and compiled AboutWindow are embedded; Release folder layout and dependencies remain intact.
-- Standalone resource loading passed for Revit 2021/net48, 2024/net48, 2025/net8 and 2027/net10. Verified image dimensions, alpha transparency, byte-for-byte embedded PNG equality, different light/dark colors, identical theme silhouettes, frozen images and cache reuse.
-- Actual theme switching inside Revit has not been exercised. Existing compilation warnings remain.
-- The accepted docs and reference PNG are unchanged. Freeze stores the reference image hash, not a binary copy.
-- Verification utilities stay in ignored .tools/; no repository test suite was added.
+Freeze stays unchanged until required verification succeeds.
+
+# Accepted corrections and local verification, 2026-11-20
+- The accepted SDD/STP now require parameter IDs above names. Format 2 writes IDs as text in hidden row 1 and keeps labels in row 2. Caption changes and duplicate captions no longer affect mapping. Missing, unknown or duplicate parameter IDs prevent writes.
+- Plain itemized schedules with direct parameter fields and no summary decorations build rows directly from collected Revit elements. Repeated values do not affect ID assignment. Complex native tables retain conservative matching; unresolved associations raise an export error rather than creating blank/wrong element IDs.
+- Shared type parameters are resolved on the actual type even when Revit reports ScheduleFieldType.Instance.
+- All 10 standalone scenario groups passed, including schema validation, ID/header placement, repeated values, column/row reorder, caption independence, malformed parameter IDs, data types/units, type conflicts, stale model values, rollback contract, readonly/Info handling and idempotency.
+- Release2024 compiled successfully. Two pre-existing unused-exception warnings remain in CAD commands.
+- The user will run native Revit tests. No further Revit launches, temporary test add-ins, push or remote PR were performed. Freeze remains unchanged pending native verification.
+
+# Multi-version build and publication, 2026-11-20
+- User authorized builds for remaining versions and a feature-branch push with PR.
+- Added version-specific API adapters for numeric ElementId values, parameter data types, measurable specs and Yes/No parameters; modern IDs remain 64-bit.
+- All 18 configurations passed: Debug/Release 2021–2027 plus .NET 10 variants for 2025 and 2026. API versions match each configuration.
+- No native Revit sessions were launched; freeze remains unchanged pending native verification.

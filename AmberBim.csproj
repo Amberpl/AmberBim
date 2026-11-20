@@ -13,7 +13,7 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <Deterministic>true</Deterministic>
-    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**;tools\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);bin\**;obj\**;.tools\**;.axe\**;tools\**;tests\**</DefaultItemExcludes>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <OutputPath>bin\Revit$(RevitVersion)\$(Configuration)\</OutputPath>
     <RevitApiPath Condition="'$(RevitApiPath)' == ''">$(ProgramW6432)\Autodesk\Revit $(RevitVersion)</RevitApiPath>
@@ -43,6 +43,8 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="System.Configuration" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
   </ItemGroup>
   <ItemGroup Condition="'$(RevitVersion)' &gt;= '2024'">

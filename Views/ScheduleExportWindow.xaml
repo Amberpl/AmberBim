@@ -1,0 +1,57 @@
+<ui:FluentWindow x:Class="AmberBim.Views.ScheduleExportWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 Title="Eksport zestawień do Excela" Width="1100" Height="580" MinWidth="900" MinHeight="420"
+                 WindowStartupLocation="CenterOwner" ShowInTaskbar="False" ExtendsContentIntoTitleBar="True"
+                 PreviewKeyDown="HandleKey" Background="{DynamicResource ApplicationBackgroundBrush}"
+                 Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+    <ui:FluentWindow.Resources>
+        <ResourceDictionary><ResourceDictionary.MergedDictionaries>
+            <ui:ThemesDictionary Theme="Light" /><ui:ControlsDictionary />
+        </ResourceDictionary.MergedDictionaries></ResourceDictionary>
+    </ui:FluentWindow.Resources>
+    <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <ui:TitleBar Title="Eksport zestawień do Excela" ShowMinimize="False" ShowMaximize="True" />
+        <Grid Grid.Row="1" Margin="24,12,24,24">
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <StackPanel>
+                <TextBlock Text="Wybierz zestawienia" FontSize="24" FontWeight="SemiBold" />
+                <TextBlock Text="Każde zestawienie trafi do osobnego arkusza. Skoroszyt zawiera również arkusz Info z zasadami importu."
+                           TextWrapping="Wrap" Margin="0,6,0,14" />
+            </StackPanel>
+            <DockPanel Grid.Row="1" Margin="0,0,0,12">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                    <ui:Button Content="Zaznacz widoczne" Click="SelectVisible" Margin="12,0,6,0"/>
+                    <ui:Button Content="Odznacz wszystkie" Click="ClearSelection"/>
+                </StackPanel>
+                <TextBox x:Name="SearchBox" TextChanged="FilterChanged" VerticalContentAlignment="Center" ToolTip="Filtruj zestawienia po nazwie" />
+            </DockPanel>
+            <DataGrid Grid.Row="2" x:Name="SchedulesGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"
+                      HeadersVisibility="Column" SelectionMode="Extended" EnableRowVirtualization="True">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Wybór" Width="64" Binding="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn Header="Zestawienie" Width="*" Binding="{Binding Name}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="220" Binding="{Binding CategoryName}" IsReadOnly="True" CanUserSort="False">
+                        <DataGridTextColumn.Header>
+                            <StackPanel>
+                                <TextBlock Text="Kategoria" Margin="0,0,0,4"/>
+                                <ComboBox x:Name="CategoryFilter" Width="200" DisplayMemberPath="CategoryName"
+                                          SelectedValuePath="CategoryId" SelectionChanged="CategoryChanged"
+                                          ToolTip="Filtruj zestawienia po kategorii"/>
+                            </StackPanel>
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="Tryb" Width="310" Binding="{Binding Status}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock Grid.Row="3" Margin="0,12,0,16" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                       Text="Zestawienia grupowane są tylko do odczytu. Kolumna A zawiera UniqueId elementów, ukryty wiersz 1 zawiera ID parametrów, a wiersz 2 — ich nazwy."/>
+            <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+                <ui:Button Content="Anuluj" IsCancel="True" Click="Cancel" MinWidth="100" Margin="0,0,10,0"/>
+                <ui:Button Content="Wybierz plik i eksportuj" IsDefault="True" Click="Accept" MinWidth="190"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</ui:FluentWindow>

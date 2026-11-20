@@ -60,9 +60,11 @@ namespace AmberBim
             app.CreateRibbonTab("AmberBIM");
             var rebarPanel = app.CreateRibbonPanel("AmberBIM", "Rebar");
             var cadPanel = app.CreateRibbonPanel("AmberBIM", "CAD");
+            var excelPanel = app.CreateRibbonPanel("AmberBIM", "Excel");
             var infoPanel = app.CreateRibbonPanel("AmberBIM", "Info");
             AddPushButton(rebarPanel);
             AddCadButton(cadPanel);
+            AddExcelButtons(excelPanel);
             AddInfoButton(infoPanel);
         }
 
@@ -121,6 +123,16 @@ namespace AmberBim
         {
             ribbonIcons.Add(button, icon);
             RibbonIcons.Apply(button, icon, darkIcons ?? false);
+        }
+
+        private void AddExcelButtons(RibbonPanel panel)
+        {
+            var export = new PushButtonData("ExportSchedulesExcel", "Eksport do\nExcela", assemblyPath, "AmberBim.ScheduleExcel.ExportSchedulesCommand")
+            { ToolTip = "Eksport wybranych zestawień do skoroszytu XLSX. Każde zestawienie w osobnym arkuszu." };
+            Track((PushButton)panel.AddItem(export), "ExcelExport");
+            var import = new PushButtonData("ImportSchedulesExcel", "Import z\nExcela", assemblyPath, "AmberBim.ScheduleExcel.ImportSchedulesCommand")
+            { ToolTip = "Aktualizacja parametrów z pliku AmberBIM: elementy po UniqueId w kolumnie A, parametry po ID w ukrytym wierszu 1. Zapis po walidacji bez podglądu." };
+            Track((PushButton)panel.AddItem(import), "ExcelImport");
         }
 
         private void ApplyIcons(bool dark)
