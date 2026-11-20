@@ -1,3 +1,5 @@
+param([switch]$CompactInfo)
+
 $ErrorActionPreference = 'Stop'
 $galleryProject = Join-Path $PSScriptRoot 'UiGallery.csproj'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
@@ -28,7 +30,11 @@ $supportedSdk = & $dotnetExecutable --list-sdks | Where-Object { $_ -match '^(\d
 if (-not $supportedSdk) {
     throw 'Brak .NET SDK 10 lub nowszego. Samo środowisko uruchomieniowe .NET nie wystarcza do zbudowania galerii.'
 }
-& $dotnetExecutable run --project $galleryProject --configuration Release
+if ($CompactInfo) {
+    & $dotnetExecutable run --project $galleryProject --configuration Release -- --compact-info
+} else {
+    & $dotnetExecutable run --project $galleryProject --configuration Release
+}
 if ($LASTEXITCODE -ne 0) {
     throw "Nie udało się uruchomić galerii (kod $LASTEXITCODE)."
 }

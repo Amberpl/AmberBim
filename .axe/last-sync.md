@@ -40,3 +40,10 @@
 - Close is aligned beside the author/copyright group; the link is the last content row.
 - Gallery specification and freeze are unchanged: this refines the exploratory compact variant within the accepted scope.
 - Rebuilt and inspected the compact render; native Close/Escape/link checks passed for both variants.
+
+# Footer alignment refinement
+- User requested bottom alignment of Close and the website address, with bottom spacing equal to the side spacing.
+- Close and the address share a footer grid, both bottom-aligned. Content margins are 20 DIP left/right/bottom.
+- Start-Gallery.ps1 -CompactInfo displays the compact window directly for user review.
+- The gallery was rebuilt and launched with that preview. Per user instruction, no automated behavior or visual checks were run; the user owns verification.
+- The approved gallery specification and freeze remain unchanged; this is an exploratory layout refinement.
